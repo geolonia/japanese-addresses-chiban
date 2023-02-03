@@ -88,7 +88,7 @@ async function main() {
   for (const [todofuken, shikuchousons] of Object.entries(out)) {
     for (const [shikuchouson, oaza_chomes] of Object.entries(shikuchousons)) {
       for (const [oaza_chome, data] of Object.entries(oaza_chomes)) {
-        const out_dir = path.join('public', 'api', todofuken, shikuchouson, oaza_chome);
+        const out_dir = path.join('public', 'api', 'ja', todofuken, shikuchouson, oaza_chome);
         await fs.promises.mkdir(out_dir, { recursive: true });
         await fs.promises.writeFile(path.join(out_dir, '地番.json'), JSON.stringify(data.chibans));
       }
