@@ -1,0 +1,7 @@
+services:
+  mojxml2ndgeojson:
+    build: .
+    volumes:
+      - ./data:/data
+    # tty: true
+    # entrypoint: ["/bin/bash"]
