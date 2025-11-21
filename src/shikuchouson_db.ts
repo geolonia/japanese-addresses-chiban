@@ -7,7 +7,7 @@ type ShikuchosonDB = { [key: string]: {
 } }
 
 export async function loadShikuchosonDB(): Promise<ShikuchosonDB> {
-  const csvIn = fs.createReadStream('./data/shikuchouson_code.csv', 'utf8');
+  const csvIn = fs.createReadStream('./data/csv/shikuchouson_code.csv', 'utf8');
   const out: ShikuchosonDB = {};
   const csvParser = csvIn.pipe(parse());
   for await (const record of csvParser) {
