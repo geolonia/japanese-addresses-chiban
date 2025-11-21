@@ -19,5 +19,5 @@
     jq -cr '.features | .[]' "$geojson_file" > "$ndgeojson_file"
     rm "$geojson_file"
     ```
-* `yarn start ./ndgeojsons/`
+* `npm run start ./ndgeojsons/`
 * `api` にデータ出力されます
