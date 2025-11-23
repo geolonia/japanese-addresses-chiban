@@ -1,7 +1,7 @@
 import path from "node:path";
 import fs from "node:fs";
 
-import glob from "glob";
+import { globSync } from "glob";
 import { number2kanji } from "@geolonia/japanese-numeral";
 
 import { loadShikuchosonDB } from "./shikuchouson_db";
@@ -33,7 +33,7 @@ interface SingleChiban {
 
 async function main() {
   const ndgeojson_dir = process.argv[2];
-  const ndgeojsons = glob.sync(path.join(ndgeojson_dir, "*.ndgeojson"));
+  const ndgeojsons = globSync(path.join(ndgeojson_dir, "*.ndgeojson")).sort();
   const sdb = await loadShikuchosonDB();
   // console.log(sdb);
 
