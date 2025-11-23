@@ -26,4 +26,6 @@ RUN python3 -m venv --system-site-packages .venv && \
   pip install --upgrade pip && \
   pip install git+https://github.com/digital-go-jp/mojxml2geojson.git
 
+VOLUME /data
+
 CMD [ "./convert_main.sh", "/data" ]
