@@ -4,9 +4,9 @@
   "main": "build/index.js",
   "license": "MIT",
   "scripts": {
-    "lint": "tsc -p ./tsconfig.json",
-    "build": "docker compose build",
-    "prepare": "docker compose run --rm mojxml2ndgeojson",
+    "build": "tsc -p ./tsconfig.json",
+    "build:image": "docker compose build",
+    "prepare:convert": "docker compose run --rm mojxml2ndgeojson",
     "convert": "ts-node src/index.ts"
   },
   "devDependencies": {
