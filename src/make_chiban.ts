@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import { SingleChiban } from '@geolonia/japanese-addresses-v2';
 
+// 参考リンク: https://github.com/geolonia/japanese-addresses-v2/blob/6fa7674951437a05ad9368fad3b0bac38c463e84/src/processes/04_make_chiban.ts
 const HEADER_CHUNK_SIZE = 50_000;
 
 export type ChibanApi = {
