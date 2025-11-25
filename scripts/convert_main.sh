@@ -14,7 +14,7 @@ IGNORE_DIR="$DATA_DIR/ignore"
 NDGEOJSONS_DIR="$DATA_DIR/ndgeojsons"
 
 mkdir -p $ALL_ZIPS_DIR
-find $ORG_ZIP_DIR -maxdepth 1 -name '*.zip' | xargs -P $MAX_JOBS -I '{}' unzip -f '{}' -d $ALL_ZIPS_DIR
+find $ORG_ZIP_DIR -maxdepth 1 -name '*.zip' | xargs -P $MAX_JOBS -I '{}' unzip -o '{}' -d $ALL_ZIPS_DIR
 
 find $ALL_ZIPS_DIR -name '*.zip' | xargs -P $MAX_JOBS zgrep -l '<座標系>任意座標系</座標系>' > $DATA_DIR/ninni_zahyou.txt
 
