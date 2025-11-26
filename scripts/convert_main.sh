@@ -1,35 +1,36 @@
 #!/bin/bash -e
-set -ex
 
 # 参考リンク: https://gist.github.com/keichan34/d6e8f283bb5810d6f4aa8d941f9a824c
 
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
 DATA_DIR="$1"
 # DATA_DIR="/data"
 
 MAX_JOBS=$(nproc)
 
 ORG_ZIP_DIR="$DATA_DIR/moj_data"
-ALL_ZIPS_DIR="$DATA_DIR/all_zips"
-IGNORE_DIR="$DATA_DIR/ignore"
-NDGEOJSONS_DIR="$DATA_DIR/ndgeojsons"
+TMP_DIR="$DATA_DIR/tmp"
 
-mkdir -p $ALL_ZIPS_DIR
-find $ORG_ZIP_DIR -maxdepth 1 -name '*.zip' | xargs -P $MAX_JOBS -I '{}' unzip -o '{}' -d $ALL_ZIPS_DIR
-
-find $ALL_ZIPS_DIR -name '*.zip' | xargs -P $MAX_JOBS zgrep -l '<座標系>任意座標系</座標系>' > $DATA_DIR/ninni_zahyou.txt
-
-mkdir -p $IGNORE_DIR
-cat $DATA_DIR/ninni_zahyou.txt | xargs mv -t $IGNORE_DIR/
-
-ls $ALL_ZIPS_DIR | wc -l
-ls $IGNORE_DIR | wc -l
-
-mkdir -p $NDGEOJSONS_DIR
+mkdir -p "$TMP_DIR"
 
 . .venv/bin/activate
 
-find $ALL_ZIPS_DIR -name '*.zip' -print0 | parallel -0 -j $MAX_JOBS ./convert_in_place.sh
-mv $ALL_ZIPS_DIR/*.ndgeojson $NDGEOJSONS_DIR/
+process_zip() {
+  local org_zip_file="$1"
+  local tmp_zip_dir=$TMP_DIR/$(basename "$org_zip_file" .zip)
+  mkdir -p "$tmp_zip_dir"
+  unzip -qq -o "$org_zip_file" -d "$tmp_zip_dir"
+  for zip_file in $(find $tmp_zip_dir -name '*.zip' | sort); do
+    "$SCRIPT_DIR/convert_in_place.sh" "$zip_file"
+  done
+  node build/index.js "$tmp_zip_dir"
+  rm -rf "$tmp_zip_dir"
+}
 
-find $IGNORE_DIR -name '*.zip' -print0 | parallel -0 -j $MAX_JOBS ./convert_in_place.sh
-mv $IGNORE_DIR/*.ndgeojson $NDGEOJSONS_DIR/
+for org_zip_file in $(find $ORG_ZIP_DIR -maxdepth 1 -name '*.zip' | sort); do
+  process_zip "$org_zip_file" &
+  if [[ $(jobs -r -p | wc -l) -ge $MAX_JOBS ]]; then
+    wait -n
+  fi
+done
+wait
