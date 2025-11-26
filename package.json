@@ -4,10 +4,11 @@
   "main": "build/index.js",
   "license": "MIT",
   "scripts": {
+    "dev": "tsx src/index.ts",
     "build": "tsc -p ./tsconfig.json",
+    "convert": "./scripts/convert_main.sh",
     "build:image": "docker compose build",
-    "prepare:convert": "docker compose run --rm mojxml2ndgeojson",
-    "convert": "tsx src/index.ts"
+    "run:image": "docker compose run --rm mojxml2chibantxt"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22",

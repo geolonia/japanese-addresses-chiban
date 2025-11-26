@@ -10,6 +10,10 @@ import { katakanaMap } from "./katakana_map";
 import { ChibanApi, outputChibanData } from "./make_chiban";
 
 async function main() {
+  if (process.argv.length < 3) {
+    console.error(`Usage: node build/index.js <ndgeojson_dir>`);
+    process.exit(1);
+  }
   const ndgeojson_dir = process.argv[2];
   const ndgeojsons = globSync(path.join(ndgeojson_dir, "*.ndgeojson")).sort();
   const sdb = await loadShikuchosonDB();

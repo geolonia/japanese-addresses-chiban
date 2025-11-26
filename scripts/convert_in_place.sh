@@ -1,9 +1,8 @@
 #!/bin/bash -e
-set -ex
 
 # 参考リンク: https://gist.github.com/keichan34/d6e8f283bb5810d6f4aa8d941f9a824c
 
-unzip -o "$1" -d "$(dirname "$1")"
+unzip -qq -o "$1" -d "$(dirname "$1")"
 xml_file="${1%.zip}.xml"
 mojxml2geojson "$xml_file"
 rm "$xml_file"
