@@ -41,9 +41,9 @@ for (let i = 0; i < junishi.length; i++) {
 offset = Object.keys(chibanSortMap).length;
 
 // 耕地/東西南北/内外/上中下
-const kochi = ['耕','地', '東','西','南','北', '内','外', '上','中','下'];
-for (let i = 0; i < kochi.length; i++) {
-  chibanSortMap[kochi[i]] = (offset + i).toString().padStart(digit, '0');
+const misc = ['耕','地', '東','西','南','北', '内','外', '上','中','下'];
+for (let i = 0; i < misc.length; i++) {
+  chibanSortMap[misc[i]] = (offset + i).toString().padStart(digit, '0');
 }
 offset = Object.keys(chibanSortMap).length;
 
