@@ -1,10 +1,10 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 
 # 参考リンク: https://gist.github.com/keichan34/d6e8f283bb5810d6f4aa8d941f9a824c
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
-DATA_DIR="$1"
-# DATA_DIR="/data"
+# DATA_DIR="$1"
+DATA_DIR="./data"
 
 MAX_JOBS=$(nproc)
 

@@ -1,7 +1,8 @@
 services:
-  mojxml2ndgeojson:
+  mojxml2chibantxt:
     build: .
     volumes:
-      - ./data:/data
+      - ./data:/app/data
+      - ./public:/app/public
     # tty: true
     # entrypoint: ["/bin/bash"]
