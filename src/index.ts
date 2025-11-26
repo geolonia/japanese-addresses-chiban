@@ -7,6 +7,7 @@ import { normalize } from "@geolonia/normalize-japanese-addresses";
 import { loadShikuchosonDB } from "./shikuchouson_db";
 import { ndGeoJSONReader } from "./ndgeojson_reader";
 import { katakanaMap } from "./katakana_map";
+import { chibanSortMap } from "./chiban_sort_map";
 import { ChibanApi, outputChibanData } from "./make_chiban";
 
 async function main() {
@@ -107,12 +108,15 @@ async function main() {
         continue;
       }
 
+      const sortKey1 = prc_num1.split('').map(c => chibanSortMap[c] || c.padStart(3, '0')).join('');
+      const sortKey2 = prc_num2.split('').map(c => chibanSortMap[c] || c.padStart(3, '0')).join('');
+      const sortKey3 = prc_num3.split('').map(c => chibanSortMap[c] || c.padStart(3, '0')).join('');
       const chiban: SingleChiban & { sortKey: string } = {
         prc_num1: prc_num1,
         prc_num2: prc_num2,
         prc_num3: prc_num3,
         point: point,
-        sortKey: `${prc_num1.padStart(10, '0')}${prc_num2.padStart(10, '0')}${prc_num3.padStart(10, '0')}`,
+        sortKey: `${sortKey1.padStart(30, '0')}${sortKey2.padStart(30, '0')}${sortKey3.padStart(30, '0')}`,
       }
 
       machiaza.chibans[banchi] = chiban;
