@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 
 import { globSync } from "glob";
@@ -5,6 +6,7 @@ import { SingleChiban } from '@geolonia/japanese-addresses-v2'
 import { normalize } from "@geolonia/normalize-japanese-addresses";
 
 import { loadShikuchosonDB } from "./shikuchouson_db";
+import { mergedCityCodeMap } from "./merged_city_code_map";
 import { ndGeoJSONReader } from "./ndgeojson_reader";
 import { katakanaMap } from "./katakana_map";
 import { chibanSortMap } from "./chiban_sort_map";
@@ -34,8 +36,13 @@ async function main() {
   for (const ndgeojson of ndgeojsons) {
     const reader = ndGeoJSONReader(ndgeojson);
     for await (const row of reader) {
-      const shikuchouson_data = sdb[row.properties.市区町村コード];
-      // console.log(shikuchouson_data, row.properties);
+      const cityCode = mergedCityCodeMap[row.properties.市区町村コード] || row.properties.市区町村コード;
+      const shikuchouson_data = sdb[cityCode];
+      if (!shikuchouson_data) {
+        // 市区町村コードからデータが見つからない場合は終了
+        fs.writeFileSync(2, `Error: Unknown city code: ${row.properties.市区町村コード} ${JSON.stringify(row.properties)}\n`);
+        process.exit(0);
+      }
 
       const machiazaName = `${row.properties.大字名 || ''}${row.properties.丁目名 || ''}${row.properties.小字名 || ''}`;
       if (machiazaName === '') {
@@ -48,7 +55,8 @@ async function main() {
       const cityName = normalizedAddress.city;
       const townName = normalizedAddress.town;
       if (!prefName || !cityName || !townName) {
-        console.warn(`Warning: Incomplete normalization result: ${address} ${JSON.stringify(row)}`);
+        // 正規化レベル3(大字・丁目レベル)に達しない場合はスキップ
+        fs.writeFileSync(1, `Warning: Incomplete normalization result: ${address} ${JSON.stringify(row.properties)}\n`);
         continue;
       }
 
@@ -104,7 +112,7 @@ async function main() {
 
       if (machiaza.chibans[banchi]) {
         // 既に登録済みの地番の場合はスキップ
-        console.log(`Duplicate chiban found: ${prefName} ${cityName} ${townName} ${orginalBanchi} ${point || '-'}`);
+        // console.log(`Duplicate chiban found: ${prefName} ${cityName} ${townName} ${orginalBanchi} ${point || '-'}`);
         continue;
       }
 
