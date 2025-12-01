@@ -7,6 +7,7 @@
     "dev": "tsx src/index.ts",
     "build": "tsc -p ./tsconfig.json",
     "convert": "./scripts/convert_main.sh",
+    "convert:mojxml-rs": "./scripts/convert_with_mojxml-rs.sh",
     "build:image": "docker compose build",
     "run:image": "docker compose run --rm mojxml2chibantxt"
   },
